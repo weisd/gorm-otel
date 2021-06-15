@@ -1,4 +1,4 @@
-package gormopentracing
+package gormotel
 
 // operationName defines a type to wrap the name of each operation name.
 type operationName string
@@ -26,16 +26,16 @@ func (op operationStage) Name() string {
 }
 
 const (
-	_stageBeforeCreate operationStage = "opentracing:before_create"
-	_stageAfterCreate  operationStage = "opentracing:after_create"
-	_stageBeforeUpdate operationStage = "opentracing:before_update"
-	_stageAfterUpdate  operationStage = "opentracing:after_update"
-	_stageBeforeQuery  operationStage = "opentracing:before_query"
-	_stageAfterQuery   operationStage = "opentracing:after_query"
-	_stageBeforeDelete operationStage = "opentracing:before_delete"
-	_stageAfterDelete  operationStage = "opentracing:after_delete"
-	_stageBeforeRow    operationStage = "opentracing:before_row"
-	_stageAfterRow     operationStage = "opentracing:after_row"
-	_stageBeforeRaw    operationStage = "opentracing:before_raw"
-	_stageAfterRaw     operationStage = "opentracing:after_raw"
+	_stageBeforeCreate operationStage = "opentelemetry:before_create"
+	_stageAfterCreate  operationStage = "opentelemetry:after_create"
+	_stageBeforeUpdate operationStage = "opentelemetry:before_update"
+	_stageAfterUpdate  operationStage = "opentelemetry:after_update"
+	_stageBeforeQuery  operationStage = "opentelemetry:before_query"
+	_stageAfterQuery   operationStage = "opentelemetry:after_query"
+	_stageBeforeDelete operationStage = "opentelemetry:before_delete"
+	_stageAfterDelete  operationStage = "opentelemetry:after_delete"
+	_stageBeforeRow    operationStage = "opentelemetry:before_row"
+	_stageAfterRow     operationStage = "opentelemetry:after_row"
+	_stageBeforeRaw    operationStage = "opentelemetry:before_raw"
+	_stageAfterRaw     operationStage = "opentelemetry:after_raw"
 )

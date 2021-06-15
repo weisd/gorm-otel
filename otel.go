@@ -1,4 +1,4 @@
-package gormopentracing
+package gormotel
 
 import (
 	"strings"
@@ -6,12 +6,12 @@ import (
 	"gorm.io/gorm"
 )
 
-type opentracingPlugin struct {
-	// opt includes options those opentracingPlugin support.
+type otelPlugin struct {
+	// opt includes options those otelPlugin support.
 	opt *options
 }
 
-// New constructs a new plugin based opentracing. It supports to trace all operations in gorm,
+// New constructs a new plugin based opentelemetry. It supports to trace all operations in gorm,
 // so if you have already traced your servers, now this plugin will perfect your tracing job.
 func New(opts ...applyOption) gorm.Plugin {
 	dst := defaultOption()
@@ -19,18 +19,18 @@ func New(opts ...applyOption) gorm.Plugin {
 		apply(dst)
 	}
 
-	return opentracingPlugin{
+	return otelPlugin{
 		//logResult: dst.logResult,
 		opt: dst,
 	}
 }
 
-func (p opentracingPlugin) Name() string {
-	return "opentracing"
+func (p otelPlugin) Name() string {
+	return "opentelemetry"
 }
 
 // Initialize registers all needed callbacks
-func (p opentracingPlugin) Initialize(db *gorm.DB) (err error) {
+func (p otelPlugin) Initialize(db *gorm.DB) (err error) {
 	e := myError{
 		errs: make([]string, 0, 12),
 	}

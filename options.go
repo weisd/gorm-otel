@@ -1,14 +1,20 @@
-package gormopentracing
+package gormotel
 
-import "github.com/opentracing/opentracing-go"
+import (
+	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/trace"
+)
+
+const (
+	tracerName = "github.com/wei840222/gorm-otel"
+)
 
 type options struct {
+	tracer trace.Tracer
+
 	// logResult means log SQL operation result into span log which causes span size grows up.
 	// This is advised to only open in developing environment.
 	logResult bool
-
-	// tracer allows users to use customized and different tracer to makes tracing clearly.
-	tracer opentracing.Tracer
 
 	// Whether to log statement parameters or leave placeholders in the queries.
 	logSqlParameters bool
@@ -16,29 +22,26 @@ type options struct {
 
 func defaultOption() *options {
 	return &options{
+		tracer:           otel.GetTracerProvider().Tracer(tracerName),
 		logResult:        false,
-		tracer:           opentracing.GlobalTracer(),
 		logSqlParameters: true,
 	}
 }
 
 type applyOption func(o *options)
 
-// WithLogResult enable opentracingPlugin to log the result of each executed sql.
-func WithLogResult(logResult bool) applyOption {
+// WithTracerProvider specifies a tracer provider to use for creating a tracer.
+// If none is specified, the global provider is used.
+func WithTracerProvider(provider trace.TracerProvider) applyOption {
 	return func(o *options) {
-		o.logResult = logResult
+		o.tracer = provider.Tracer(tracerName)
 	}
 }
 
-// WithTracer allows to use customized tracer rather than the global one only.
-func WithTracer(tracer opentracing.Tracer) applyOption {
+// WithLogResult enable otelPlugin to log the result of each executed sql.
+func WithLogResult(logResult bool) applyOption {
 	return func(o *options) {
-		if tracer == nil {
-			return
-		}
-
-		o.tracer = tracer
+		o.logResult = logResult
 	}
 }
 
