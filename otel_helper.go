@@ -34,8 +34,7 @@ func (p otelPlugin) injectBefore(db *gorm.DB, op operationName) {
 		db.Logger.Error(context.TODO(), "could not inject sp from nil Statement.Context or nil Statement")
 		return
 	}
-	_, sp := p.opt.tracer.Start(db.Statement.Context, op.String())
-	sp.SetAttributes(attribute.String(_systemTagKey, db.Name()))
+	_, sp := p.opt.tracer.Start(db.Statement.Context, "GORM "+op.String())
 	db.InstanceSet(opentelemetrySpanKey, sp)
 }
 
@@ -73,7 +72,10 @@ func tag(sp trace.Span, db *gorm.DB) {
 		sp.SetAttributes(attribute.Bool(_errorTagKey, true))
 	}
 
-	sp.SetAttributes(attribute.String(_tableTagKey, db.Statement.Table))
+	sp.SetAttributes(
+		attribute.String(_systemTagKey, db.Name()),
+		attribute.String(_tableTagKey, db.Statement.Table),
+	)
 }
 
 // evnet called after operation
