@@ -6,6 +6,7 @@ import (
 
 	jsoniter "github.com/json-iterator/go"
 	"go.opentelemetry.io/otel/attribute"
+	"go.opentelemetry.io/otel/codes"
 	"go.opentelemetry.io/otel/trace"
 	"gorm.io/gorm"
 )
@@ -87,6 +88,9 @@ func evnet(sp trace.Span, db *gorm.DB, verbose bool, logSqlVariables bool) {
 	// log error
 	if err := db.Error; err != nil {
 		sp.RecordError(db.Error)
+		sp.SetStatus(codes.Error, err.Error())
+	} else {
+		sp.SetStatus(codes.Ok, "OK")
 	}
 
 	if verbose && db.Statement.Dest != nil {

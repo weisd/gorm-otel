@@ -6,7 +6,7 @@ import (
 )
 
 const (
-	tracerName = "github.com/wei840222/gorm-otel"
+	tracerName = "gorm-otel"
 )
 
 type options struct {
