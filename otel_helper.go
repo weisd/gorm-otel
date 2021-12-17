@@ -65,7 +65,7 @@ func (p otelPlugin) extractAfter(db *gorm.DB) {
 
 	// tag and log fields we want.
 	tag(sp, db)
-	evnet(sp, db, p.opt.logResult, p.opt.logSqlParameters)
+	evnet(sp, db, p.opt.logResult, p.opt.logSqlParameters, p.opt.ignoreErrNotFound)
 }
 
 // tag called after operation
