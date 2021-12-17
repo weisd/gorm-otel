@@ -2,6 +2,7 @@ package gormotel
 
 import (
 	"context"
+	"errors"
 	"unsafe"
 
 	jsoniter "github.com/json-iterator/go"
@@ -80,13 +81,13 @@ func tag(sp trace.Span, db *gorm.DB) {
 }
 
 // evnet called after operation
-func evnet(sp trace.Span, db *gorm.DB, verbose bool, logSqlVariables bool) {
+func evnet(sp trace.Span, db *gorm.DB, verbose bool, logSqlVariables bool, ignoreErrNotFound bool) {
 	attrs := make([]attribute.KeyValue, 0, 4)
 	attrs = appendSql(attrs, db, logSqlVariables)
 	attrs = append(attrs, attribute.Int64(_rowsAffectedLogKey, db.Statement.RowsAffected))
 
 	// log error
-	if err := db.Error; err != nil {
+	if err := db.Error; err != nil && !(ignoreErrNotFound && errors.Is(err, gorm.ErrRecordNotFound)) {
 		sp.RecordError(db.Error)
 		sp.SetStatus(codes.Error, err.Error())
 	} else {

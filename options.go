@@ -18,13 +18,16 @@ type options struct {
 
 	// Whether to log statement parameters or leave placeholders in the queries.
 	logSqlParameters bool
+
+	ignoreErrNotFound bool
 }
 
 func defaultOption() *options {
 	return &options{
-		tracer:           otel.GetTracerProvider().Tracer(tracerName),
-		logResult:        false,
-		logSqlParameters: true,
+		tracer:            otel.GetTracerProvider().Tracer(tracerName),
+		logResult:         false,
+		logSqlParameters:  true,
+		ignoreErrNotFound: true,
 	}
 }
 
@@ -48,5 +51,11 @@ func WithLogResult(logResult bool) applyOption {
 func WithSqlParameters(logSqlParameters bool) applyOption {
 	return func(o *options) {
 		o.logSqlParameters = logSqlParameters
+	}
+}
+
+func WithIgnoreErrNotFound(ignoreErrNotFound bool) applyOption {
+	return func(o *options) {
+		o.ignoreErrNotFound = ignoreErrNotFound
 	}
 }
